@@ -20,7 +20,7 @@ Depending on your project's structure, you can use different approaches
 - Download this repository as zip
 - copy your project files inside a "project" subfolder
 
-### Existing project - composer dependencie (EXPERIMENTAL)
+### Existing project - composer dependency (EXPERIMENTAL)
 - In the "extra" section of your project's composer.json file, add
 ```
 	"extra": {
