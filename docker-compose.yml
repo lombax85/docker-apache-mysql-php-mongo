@@ -1,0 +1,156 @@
+version: '2'
+
+services:
+
+### Workspace Utilities Container ###########################
+
+    workspace:
+        build:
+            context: ./${DOCKER_DIRECTORY}/workspace
+            args:
+                - INSTALL_XDEBUG
+                - INSTALL_MONGO
+                - INSTALL_NODE
+                - INSTALL_DRUSH
+                - INSTALL_AEROSPIKE_EXTENSION
+                - COMPOSER_GLOBAL_INSTALL
+                - INSTALL_WORKSPACE_SSH
+                - PUID=1000
+                - PGID=1000
+                - NODE_VERSION
+        volumes_from:
+            - volumes_source
+        extra_hosts:
+            # IMPORTANT: Replace with your Docker Host IP (will be appended to /etc/hosts)
+            - "dockerhost:10.200.10.1"
+        ports:
+           - "22:22"
+        tty: true
+
+### PHP-FPM Container #######################################
+
+    php-fpm:
+        build:
+            context: ./${DOCKER_DIRECTORY}/php-fpm
+            args:
+                - INSTALL_XDEBUG
+                - INSTALL_MONGO
+                - INSTALL_ZIP_ARCHIVE
+                - INSTALL_MEMCACHED
+                - INSTALL_OPCACHE
+                - INSTALL_AEROSPIKE_EXTENSION
+                - INSTALL_GEM_AND_SASS
+            dockerfile: ${PHP_DOCKERFILE}
+        volumes_from:
+            - volumes_source
+        expose:
+            - "9000"
+        links:
+            - workspace
+        extra_hosts:
+            # IMPORTANT: Replace with your Docker Host IP (will be appended to /etc/hosts)
+            - "dockerhost:10.200.10.1"
+        environment:
+            # IMPORTANT: Set the Remote Interpreter entry matching name to `laravel`
+            - PHP_IDE_CONFIG="serverName=laravel"
+
+### Apache Server Container ##################################
+
+    apache2:
+        build:
+            context: ./${DOCKER_DIRECTORY}/apache2
+            args:
+                - PHP_SOCKET="php-fpm:9000"
+                - PROJECT_SUBDIRECTORY
+        volumes_from:
+            - volumes_source
+        volumes:
+            - ./${DOCKER_DIRECTORY}/logs/apache2:/var/log/apache2
+        ports:
+            - "${HTTP_PORT}:80"
+            - "${HTTPS_PORT}:443"
+        links:
+            - php-fpm
+
+### MySQL Container #########################################
+
+    mysql:
+        build: ./${DOCKER_DIRECTORY}/mysql
+        volumes_from:
+            - volumes_data
+        ports:
+            - "${MYSQL_PORT}:3306"
+        environment:
+            MYSQL_DATABASE: homestead
+            MYSQL_USER: homestead
+            MYSQL_PASSWORD: secret
+            MYSQL_ROOT_PASSWORD: root
+
+### MongoDB Container #######################################
+
+    mongo:
+        build: ./${DOCKER_DIRECTORY}/mongo
+        ports:
+            - "27017:27017"
+        volumes_from:
+            - volumes_data
+
+
+### Memcached Container #####################################
+
+    memcached:
+        build: ./${DOCKER_DIRECTORY}/memcached
+        volumes_from:
+            - volumes_data
+        ports:
+            - "11211:11211"
+        links:
+            - php-fpm
+
+### phpMyAdmin Container ##################################
+
+    phpmyadmin:
+        build: ./${DOCKER_DIRECTORY}/phpmyadmin
+        environment:
+            PMA_ARBITRARY: 1
+            MYSQL_USER: homestead
+            MYSQL_PASSWORD: secret
+            MYSQL_ROOT_PASSWORD: root
+        volumes_from:
+            - volumes_data
+        ports:
+            - "${PHPMYADMIN_PORT}:80"
+        links:
+            # for mysql container
+            - "mysql:db"
+            # for mariadb container
+            # - "mariadb:db"
+
+
+### Application Code Container ######################
+
+    volumes_source:
+        image: tianon/true
+        volumes:
+            - ./${PROJECT_DIRECTORY}:/var/www/
+            # Demonstration of how to mount multiple sites
+            # - ../../site_a/:/var/www/site_a
+            # - ../../site_b/:/var/www/site_b
+
+### Databases Data Container ################################
+
+    volumes_data:
+        image: tianon/true
+        volumes:
+            - ./${DOCKER_DIRECTORY}/data/mysql:/var/lib/mysql
+            - ./${DOCKER_DIRECTORY}/data/memcached:/var/lib/memcached
+            - ./${DOCKER_DIRECTORY}/data/mongo:/data/db
+            - ./${DOCKER_DIRECTORY}/data/sessions:/sessions
+            # - ./data/postgres:/var/lib/postgresql/data
+            # - ./data/redis:/data
+            # - ./data/neo4j:/var/lib/neo4j/data
+            # - ./data/aerospike:/opt/aerospike/data
+            # - ./data/caddy:/root/.caddy
+            # - ./data/elasticsearch/data:/usr/share/elasticsearch/data
+
+### Add more Containers below ###############################
