@@ -57,7 +57,7 @@ If you use this setup in a production environment, don't forget to backup all da
 The /docker/data directory is shared among containers using directory binding and is kept between container rebuilds.   
 For this reason, when you rebuild - for example - your mysql container, the data are not lost. However, pay attention because if you change your mysql engine to somethings not compatible with the content of your data directory, the content itself can become corrupted.  
 
-HOSTNAME:
+###HOSTNAME:
 
 Docker creates a virtual private and isolated network for all containers of the same project (it uses the root directory name as a prefix).  
 To reach one container from another (for example for reaching mysql container from php-fpm) simply use the hostname.
@@ -87,4 +87,4 @@ mongo
 
 
 ###TODO
-- aggiungere la possibilità di includere questo progetto come dipendenza composer
+- add the possibility to declare this project as a composer.json dependency
