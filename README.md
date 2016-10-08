@@ -1,4 +1,4 @@
-What
+DESCRIPTION
 -----------------------
 
 This project demonstrates how to use docker-compose to split a sample php application into docker containers.  
@@ -11,7 +11,7 @@ INSTALL
 Depending on your project's structure, you can use different approaches.
 
 
-### Existing project - composer dependency (EXPERIMENTAL)
+### Existing project - composer dependency (EXPERIMENTAL - don't use in production and backup your data)
 - In the "extra" section of your project's composer.json file, add
 ```
 	"extra": {
@@ -39,7 +39,7 @@ composer require lombax85/docker-apache-mysql-php-mongo
 ```
 - The whole project will be installed inside the "docker" subdir, you will find a .env file where you can set your additional environment variables
 
-NOTE: Since docker-compose use the containing folder name as the prefix for it's container, if you want to use this project more than once on your machine/server, you have to change these lines: 
+NOTE: Since docker-compose use the containing folder name as the prefix for its container, if you want to use this project more than once on your machine/server, you have to change these lines: 
 ```
 "docker/": ["lombax85/docker-apache-mysql-php-mongo"]
 ...
@@ -70,13 +70,13 @@ ADDITIONAL SETUP
 -----------------------
 - go to the directory containing the "docker-compose.yml" file. If you installed via composer, it's inside your "docker" subdirectory
 - open the .env file and set your environment variables
-- on mac: enable file sharing on docker/data and docker/logs
+- on mac: enable file sharing on ./docker/data and ./docker/logs folders
 
 
 START
 -----------------------
 
-- execute these commands
+- execute this command
 
 ```
 docker-compose build apache2 mysql workspace mongo php-fpm
@@ -99,15 +99,21 @@ docker-compose exec workspace bash
 ```
 
 will give you a shell inside the www directory.
+If you prefer, you can send your command directly without using the shell. For example, to send a "php artisan migrate", simply do
+
+```
+docker-compose exec workspace php artisan migrate
+```
 
 
 Warning, about ./docker/data directory:
 -----------------------
 
-the folder ./docker/data container all data from databases, sessions and other important data.
+The ./docker/data folder containes all data of databases and sessions.
 If you use this setup in a production environment, don't forget to backup all data with the appropriate tools (example: mysqldump for mysql).   
 The ./docker/data directory is shared among containers using directory binding and is kept between container rebuilds.   
 For this reason, when you rebuild - for example - your mysql container, the data are not lost. However, pay attention because if you change your mysql engine to somethings not compatible with the content of your data directory, the content itself can become corrupted.  
+
 
 HOSTNAMES:
 -----------------------
