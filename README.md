@@ -118,6 +118,16 @@ Go to these urls to see the results:
 
 The test code is in ./project/routes/web.php
 
+### ISSUES
+If you stop (ctrl+c) during "docker-compose up" during the first container startup, the content of /docker/data can became corrupt or not correctly initialized. In this case, for example, you won't be able to connect to MySQL.
+To solve:
+
+```
+docker-compose stop
+rm -Rf ./docker/data/mysql/*
+```
+NOTE: if you wipe MongoDB Data, don't forget to re-add the default user
+
 
 ###TODO
 - add the possibility to declare this project as a composer.json dependency
