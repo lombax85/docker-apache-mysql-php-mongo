@@ -14,6 +14,16 @@ docker-compose build apache2 mysql workspace mongo php-fpm
 docker-compose up apache2 mysql mongo
 ```
 
+###Interact with project:
+The "workspace" container should be used for all cli commands (composer install/update, artisan)
+
+```
+docker-compose exec workspace bash
+```
+
+will give you a shell inside the www directory.
+
+
 ###ATTENZIONE:
 
 la cartella /docker/data conterrà i dati di database, sessioni ecc. Sottoporre il contenuto a backup (per mysql è consigliato mysqldump e non il backup diretto della cartella)
