@@ -8,6 +8,8 @@ This project can be easily integrated into you existing webapp to permit you to 
 How to use this project
 -----------------------
 
+Depending on your project's structure, you can use different approaches
+
 ### Existing project - root directory
 - Download this repository as zip
 - copy "docker-compose.yml" file and "docker" directory in your project's root directory
@@ -18,12 +20,54 @@ How to use this project
 - Download this repository as zip
 - copy your project files inside a "project" subfolder
 
+### Existing project - composer dependencie (EXPERIMENTAL)
+- In the "extra" section of your project's composer.json file, add
+```
+	"extra": {
+        "installer-paths": {
+            "docker/": ["lombax85/docker-apache-mysql-php-mongo"]
+        }
+    }
+```
+
+
+- In the "scripts" section, "post-install-cmd" and "post-update-cmd" sub-section of your project's composer.json file, add
+```
+	"scripts": {
+    	"post-install-cmd": [
+        	"if [ ! -e ./docker/.env ]; then cp -n ./docker/.env.composer ./docker/.env; fi"
+    	],
+    	"post-update-cmd": [
+            "if [ ! -e ./docker/.env ]; then cp -n ./docker/.env.composer ./docker/.env; fi"
+        ]
+    }
+```
+- Add the dependency using the command
+```
+composer require lombax85/docker-apache-mysql-php-mongo
+```
+- The whole project will be installed inside the "docker" subdir, you will find a .env file where you can set your additional environment variables
+
+NOTE: Since docker-compose use the containing folder name as the prefix for it's container, if you want to use this project more than once on your machine/server, you have to change these lines: 
+```
+"docker/": ["lombax85/docker-apache-mysql-php-mongo"]
+...
+"if [ ! -e ./docker/.env ]; then cp -n ./docker/.env.composer ./docker/.env; fi"
+...
+```
+replacing the "docker" folder with something unique in your system, like "docker-projectname"
+
+
 ### New project
 - Download as zip (if you clone it, remove the .git directory)
 - Put your project files inside the root directory or inside a "project" subdirectory (the name of the subdirectory can be set later) OR, alternative, copy 
 - copy .env.example to .env
 
+
+-----------------------
+
 ## Then:
+- go to the directory containing the "docker-compose.yml" file. If you installed via composer, it's inside your "docker" subdirectory
 - open the .env file and set your environment variables
 - on mac: enable file sharing on docker/data and docker/logs
 - open the shell in the root directory of this project and type:
