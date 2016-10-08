@@ -1,5 +1,5 @@
 {
-    "name": "Lombax85/docker-apache-mysql-php-mongo",
+    "name": "lombax85/docker-apache-mysql-php-mongo",
     "type": "laravel-library",
     "version": "1.0.0",
     "require" : {
