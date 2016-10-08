@@ -81,17 +81,17 @@ services:
         ports:
             - "${MYSQL_PORT}:3306"
         environment:
-            MYSQL_DATABASE: homestead
-            MYSQL_USER: homestead
-            MYSQL_PASSWORD: secret
-            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
 
 ### MongoDB Container #######################################
 
     mongo:
         build: ./${DOCKER_DIRECTORY}/mongo
         ports:
-            - "27017:27017"
+            - "${MONGODB_PORT}:27017"
         volumes_from:
             - volumes_data
 
@@ -113,9 +113,9 @@ services:
         build: ./${DOCKER_DIRECTORY}/phpmyadmin
         environment:
             PMA_ARBITRARY: 1
-            MYSQL_USER: homestead
-            MYSQL_PASSWORD: secret
-            MYSQL_ROOT_PASSWORD: root
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
         volumes_from:
             - volumes_data
         ports:
