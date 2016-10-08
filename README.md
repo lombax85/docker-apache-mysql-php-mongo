@@ -14,6 +14,11 @@ docker-compose build apache2 mysql workspace mongo php-fpm
 docker-compose up apache2 mysql mongo
 ```
 
+- MongoDB: Unlike MySQL, MongoDB doesn't allow to set default username and password prior to installation. For this reason, you must set them with a post-run script. To set default user and password for mongodb, type
+	```
+	docker-compose exec mongo sh /mongo.sh user password
+	```
+
 ###Interact with project:
 The "workspace" container should be used for all cli commands (composer install/update, artisan)
 
