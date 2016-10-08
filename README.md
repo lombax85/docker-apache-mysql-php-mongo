@@ -5,20 +5,11 @@ This project demonstrates how to use docker-compose to split a sample php applic
 Each container runs a component: apache2, php-fpm, mysql, mongodb, and finally one container for data (binding project directory and data directories to the container itself), and one container for the workspace (a special container you can use to run CLI commands).  
 This project can be easily integrated into you existing webapp to permit you to deploy it faster on development machines, staging servers and production servers.
 
-How to use this project
+INSTALL
 -----------------------
 
-Depending on your project's structure, you can use different approaches
+Depending on your project's structure, you can use different approaches.
 
-### Existing project - root directory
-- Download this repository as zip
-- copy "docker-compose.yml" file and "docker" directory in your project's root directory
-- copy the ".env.example" file into your project directory and rename it into ".env"
-	NOTE: if your project has already a file called .env, you can use a subdirectory as explained in "Existing project - subdirectory"
-
-### Existing project - subdirectory
-- Download this repository as zip
-- copy your project files inside a "project" subfolder
 
 ### Existing project - composer dependency (EXPERIMENTAL)
 - In the "extra" section of your project's composer.json file, add
@@ -58,33 +49,49 @@ NOTE: Since docker-compose use the containing folder name as the prefix for it's
 replacing the "docker" folder with something unique in your system, like "docker-projectname"
 
 
-### New project
+### Alternative - Existing project - install in root directory
+- Download this repository as zip
+- copy "docker-compose.yml" file and "docker" directory in your project's root directory
+- copy the ".env.example" file into your project directory and rename it into ".env"
+	NOTE: if your project has already a file called .env, you can use a subdirectory as explained in "Existing project - subdirectory"
+
+### Alternative - Existing project - install in subdirectory
+- Download this repository as zip
+- copy your project files inside a "project" subfolder
+
+
+### Alternative - New project - install in subdirectory
 - Download as zip (if you clone it, remove the .git directory)
 - Put your project files inside the root directory or inside a "project" subdirectory (the name of the subdirectory can be set later) OR, alternative, copy 
 - copy .env.example to .env
 
 
+ADDITIONAL SETUP
 -----------------------
-
-## Then:
 - go to the directory containing the "docker-compose.yml" file. If you installed via composer, it's inside your "docker" subdirectory
 - open the .env file and set your environment variables
 - on mac: enable file sharing on docker/data and docker/logs
-- open the shell in the root directory of this project and type:
+
+
+START
+-----------------------
+
+- execute these commands
 
 ```
 docker-compose build apache2 mysql workspace mongo php-fpm
 docker-compose up -d apache2 mysql mongo
 ```
 
-- After there commands, you'll have your containers up and running, use `docker ps` to see them
+- After these commands you'll have your containers up and running, use `docker ps` to see them
 - Now do some post-install things:
 	- MongoDB: Unlike MySQL, MongoDB doesn't allow to set default username and password prior to installation. For this reason, you must set them with a post-run script. To set default user and password for mongodb, type
 	```
 	docker-compose exec mongo sh /mongo.sh user password
 	```
 
-###Interacting with project:
+Interacting with project
+-----------------------
 The "workspace" container should be used for all cli commands (composer install/update, artisan)
 
 ```
@@ -94,14 +101,16 @@ docker-compose exec workspace bash
 will give you a shell inside the www directory.
 
 
-###Warning, about /docker/data directory:
+Warning, about ./docker/data directory:
+-----------------------
 
-the folder /docker/data container all data from databases, sessions and other important data.
+the folder ./docker/data container all data from databases, sessions and other important data.
 If you use this setup in a production environment, don't forget to backup all data with the appropriate tools (example: mysqldump for mysql).   
-The /docker/data directory is shared among containers using directory binding and is kept between container rebuilds.   
+The ./docker/data directory is shared among containers using directory binding and is kept between container rebuilds.   
 For this reason, when you rebuild - for example - your mysql container, the data are not lost. However, pay attention because if you change your mysql engine to somethings not compatible with the content of your data directory, the content itself can become corrupted.  
 
-###HOSTNAME:
+HOSTNAMES:
+-----------------------
 
 Docker creates a virtual private and isolated network for all containers of the same project (it uses the root directory name as a prefix).  
 To reach one container from another (for example for reaching mysql container from php-fpm) simply use the hostname.
@@ -128,7 +137,9 @@ php-fpm
 apache2
 mongo
 
-### EXTRA - DEMO
+
+EXTRA - QUICK DEMO
+-----------------------
 At this url: http://www.lombax.it/files/project.tar
 You can find a ready-to-use laravel project that uses mysql and mongodb.  
 The .env file of the Laravel application is already configured and all composer dependencies already loaded, so to finish the setup you have to do only few things:
@@ -162,7 +173,8 @@ Go to these urls to see the results:
 
 The test code is in ./project/routes/web.php
 
-### ISSUES
+ISSUES
+-----------------------
 If you stop (ctrl+c) during "docker-compose up" during the first container startup, the content of /docker/data can became corrupt or not correctly initialized. In this case, for example, you won't be able to connect to MySQL.
 To solve:
 
@@ -171,7 +183,3 @@ docker-compose stop
 rm -Rf ./docker/data/mysql/*
 ```
 NOTE: if you wipe MongoDB Data, don't forget to re-add the default user
-
-
-###TODO
-- add the possibility to declare this project as a composer.json dependency
