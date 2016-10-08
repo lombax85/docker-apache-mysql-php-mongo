@@ -84,6 +84,33 @@ php-fpm
 apache2
 mongo
 
+### EXTRA - DEMO
+At this url: http://www.lombax.it/files/project.tar
+You can find a ready-to-use laravel project that uses mysql and mongodb.  
+The .env file of the Laravel application is already configured and all composer dependencies already loaded, so to finish the setup you have to do only few things:
+
+- clone this repo
+- do: 
+```
+docker-compose build apache2 mysql workspace mongo php-fpm
+docker-compose up apache2 mysql mongo
+```
+- copy the .tar content into the "project" subdirectory
+- The .env.example file included in this project is already configured to support this installation, so simply copy .env.example to .env
+- add this user to MongoDB:
+	```
+	docker-compose exec mongo sh /mongo.sh localuser secret
+	```
+- run laravel migration
+```
+docker-compose exec workspace php artisan migrate
+```
+
+Go to these urls to see the results:
+	- http://localhost/mysql
+	- http://localhost/mongo
+
+The test code is in ./project/routes/web.php
 
 
 ###TODO
