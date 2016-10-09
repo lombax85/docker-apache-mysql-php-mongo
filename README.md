@@ -11,7 +11,7 @@ INSTALL
 Depending on your project's structure, you can use different approaches.
 
 
-### Existing project - composer dependency (EXPERIMENTAL - don't use in production and backup your data)
+### Existing project - composer dependency (EXPERIMENTAL - don't use in production and backup your data, look in the ISSUES section)
 - In the "extra" section of your project's composer.json file, add
 ```
 	"extra": {
@@ -181,7 +181,8 @@ The test code is in ./project/routes/web.php
 
 ISSUES
 -----------------------
-If you stop (ctrl+c) during "docker-compose up" during the first container startup, the content of /docker/data can became corrupt or not correctly initialized. In this case, for example, you won't be able to connect to MySQL.
+- including as a composer dependencies is, by now, only for testing and development machines. There is a known issue where the ./docker/data directory (the directory containing database data) is deleted if the package is updated via "composer update". This will be solved in a future release, if you plan to use this project in a production environment don't use composer, use other inclusion methods explained in the INSTALL section 
+- If you stop (ctrl+c) during "docker-compose up" during the first container startup, the content of /docker/data can became corrupt or not correctly initialized. In this case, for example, you won't be able to connect to MySQL.
 To solve:
 
 ```
@@ -189,3 +190,7 @@ docker-compose stop
 rm -Rf ./docker/data/mysql/*
 ```
 NOTE: if you wipe MongoDB Data, don't forget to re-add the default user
+
+TODO
+-----------------------
+- make the composer version reliable, maybe is good a simple script that stops containers, back-up data directory and then, after update, restore it? Or better to deny update until you have done a backup?
