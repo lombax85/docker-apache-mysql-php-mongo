@@ -26,10 +26,10 @@ Depending on your project's structure, you can use different approaches.
 ```
 	"scripts": {
     	"post-install-cmd": [
-        	"if [ ! -e ./docker/.env ]; then cp -n ./docker/.env.composer ./docker/.env; fi"
+        	"php docker/composer_install.php"
     	],
     	"post-update-cmd": [
-            "if [ ! -e ./docker/.env ]; then cp -n ./docker/.env.composer ./docker/.env; fi"
+            "php docker/composer_install.php"
         ]
     }
 ```
@@ -38,15 +38,6 @@ Depending on your project's structure, you can use different approaches.
 composer require lombax85/docker-apache-mysql-php-mongo
 ```
 - The whole project will be installed inside the "docker" subdir, you will find a .env file where you can set your additional environment variables
-
-NOTE: Since docker-compose use the containing folder name as the prefix for its container, if you want to use this project more than once on your machine/server, you have to change these lines: 
-```
-"docker/": ["lombax85/docker-apache-mysql-php-mongo"]
-...
-"if [ ! -e ./docker/.env ]; then cp -n ./docker/.env.composer ./docker/.env; fi"
-...
-```
-replacing the "docker" folder with something unique in your system, like "docker-projectname"
 
 EXTRA: add /docker and /docker_data in your project's .gitignore file
 
@@ -199,6 +190,7 @@ NOTE: if you wipe MongoDB Data, don't forget to re-add the default user
 FIXED ISSUES
 -----------------------
 - including as a composer dependencies is, by now, only for testing and development machines. There is a known issue where the ./docker/data directory (the directory containing database data) is deleted if the package is updated via "composer update". This will be solved in a future release, if you plan to use this project in a production environment don't use composer, use other inclusion methods explained in the INSTALL section. FIXED BY: now the data directory is created inside your main project's directory
+- If you install inside two different projects on the same machine, you have to rename the container directory ("docker") to something unique. FIXED BY: the install script now creates a .env with an unique project name, docker_TIMESTAMP
 
 TODO
 -----------------------
