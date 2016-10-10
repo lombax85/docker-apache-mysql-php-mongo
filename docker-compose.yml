@@ -142,10 +142,10 @@ services:
     volumes_data:
         image: tianon/true
         volumes:
-            - ./${DOCKER_DIRECTORY}/data/mysql:/var/lib/mysql
-            - ./${DOCKER_DIRECTORY}/data/memcached:/var/lib/memcached
-            - ./${DOCKER_DIRECTORY}/data/mongo:/data/db
-            - ./${DOCKER_DIRECTORY}/data/sessions:/sessions
+            - ./${DOCKER_DATA_DIRECTORY}/mysql:/var/lib/mysql
+            - ./${DOCKER_DATA_DIRECTORY}/memcached:/var/lib/memcached
+            - ./${DOCKER_DATA_DIRECTORY}/mongo:/data/db
+            - ./${DOCKER_DATA_DIRECTORY}/sessions:/sessions
             # - ./data/postgres:/var/lib/postgresql/data
             # - ./data/redis:/data
             # - ./data/neo4j:/var/lib/neo4j/data
