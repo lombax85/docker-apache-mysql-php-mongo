@@ -1,1 +1,3 @@
-- inserire nel readme i prerequisiti
+- inserire nel readme i prerequisiti: docker, docker-compose, php e composer. Php e composer solo se si vuole installare via composer
+- inserire le versioni minime di docker e docker-compose (compose mi pare almeno 1.6 ma verificare meglio)
+- inserire un mini troubleshooting per problemi, es se porta duplicata
