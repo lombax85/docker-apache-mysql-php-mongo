@@ -94,7 +94,19 @@ services:
             - "${MONGODB_PORT}:27017"
         volumes_from:
             - volumes_data
+            
+### CouchDB Container #######################################
 
+    couchdb:
+        build: 
+            context: ./${DOCKER_DIRECTORY}/couchdb
+            args:
+                - CONF_COUCHDB_USER
+                - CONF_COUCHDB_PASSWORD
+        ports:
+            - "${CONF_COUCHDB_PORT}:5984"
+        volumes_from:
+            - volumes_data
 
 ### Memcached Container #####################################
 
@@ -146,6 +158,7 @@ services:
             - ./${DOCKER_DATA_DIRECTORY}/memcached:/var/lib/memcached
             - ./${DOCKER_DATA_DIRECTORY}/mongo:/data/db
             - ./${DOCKER_DATA_DIRECTORY}/sessions:/sessions
+            - ./${DOCKER_DATA_DIRECTORY}/couchdb:/opt/couchdb/data
             # - ./data/postgres:/var/lib/postgresql/data
             # - ./data/redis:/data
             # - ./data/neo4j:/var/lib/neo4j/data

@@ -2,8 +2,18 @@ DESCRIPTION
 -----------------------
 
 This project demonstrates how to use docker-compose to split a sample php application into docker containers.  
-Each container runs a component: apache2, php-fpm, mysql, mongodb, and finally one container for data (binding project directory and data directories to the container itself), and one container for the workspace (a special container you can use to run CLI commands).  
+Each container runs a component: apache2, php-fpm, mysql, mongodb, couchdb and finally one container for data (binding project directory and data directories to the container itself), and one container for the workspace (a special container you can use to run CLI commands).  
 This project can be easily integrated into you existing webapp to permit you to deploy it faster on development machines, staging servers and production servers.
+
+REQUIREMENTS
+-----------------------
+- docker-compose, min version 1.8
+- docker, min version 1.10
+
+If you want to install via composer:
+- composer
+- php, min version 5.6
+
 
 INSTALL
 -----------------------
@@ -75,8 +85,8 @@ START
 - execute this command
 
 ```
-docker-compose build apache2 mysql workspace mongo php-fpm
-docker-compose up -d apache2 mysql mongo
+docker-compose build apache2 mysql workspace mongo php-fpm couchdb
+docker-compose up -d apache2 mysql mongo couchdb
 ```
 
 - After these commands you'll have your containers up and running, use `docker ps` to see them
