@@ -1,9 +1,17 @@
 DESCRIPTION
 -----------------------
 
-This project demonstrates how to use docker-compose to split a sample php application into docker containers.  
-Each container runs a component: apache2, php-fpm, mysql, mongodb, couchdb and finally one container for data (binding project directory and data directories to the container itself), and one container for the workspace (a special container you can use to run CLI commands).  
-This project can be easily integrated into you existing webapp to permit you to deploy it faster on development machines, staging servers and production servers.
+Get your PHP/MySQL project up and running within minutes with the power of Docker and Composer!
+With few commands, you'll have your development, staging and production infrastructures ready-to-go taking advantage of Docker containers.
+Within this project, you'll find a container for the following dependencies:
+- apache
+- php-fpm
+- mysql
+- mongodb
+- couchdb
+
+Moreover, database data and sessions are managed with a specific container, and a last container is provided as the workspace (a special container you can use to run CLI commands).  
+Thanks to Composer, this project can be easily integrated and encapsulated into you existing webapp, permitting you to deploy it faster on development machines, staging servers and production servers.
 
 REQUIREMENTS
 -----------------------
@@ -15,13 +23,11 @@ If you want to install via composer:
 - php, min version 5.6
 
 
-INSTALL
+QUICK INSTALL via Composer
 -----------------------
 
-Depending on your project's structure, you can use different approaches.
+NOTE: for alternative install methods, look at the dedicated section 
 
-
-### Existing project - composer dependency (EXPERIMENTAL - test well before using in production and backup your data)
 - In the "extra" section of your project's composer.json file, add
 ```
 	"extra": {
@@ -30,7 +36,6 @@ Depending on your project's structure, you can use different approaches.
         }
     }
 ```
-
 
 - In the "scripts" section, "post-install-cmd" and "post-update-cmd" sub-section of your project's composer.json file, add
 ```
@@ -47,42 +52,21 @@ Depending on your project's structure, you can use different approaches.
 ```
 composer require lombax85/docker-apache-mysql-php-mongo
 ```
-- The whole project will be installed inside the "docker" subdir, you will find a .env file where you can set your additional environment variables
 
 EXTRA: add /docker and /docker_data in your project's .gitignore file
 
-##WARNING
-Informations about the data directory: in the .env.composer file, the data directory is configured to be inside "docker_data", placed in your main project's dir. The directory is created when you start your containers the first time. If you want to change this path, please don't place the directory inside the "docker" folder, since the folder is recreated every time you run "composer update" and you'll lost data.
+## IMPORTANT INFORMATIONS AND WARNING
+- The whole project will be installed inside the "docker" subdir, and a "docker_data" directory will appear when you start you containers.
+- inside the "docker" directory, you will find a .env file where you can set your additional environment variables (the file is pre-configured and no need of additional configuration is needed to get it up and running)
 
-
-### Alternative - Existing project - install in root directory
-- Download this repository as zip
-- copy "docker-compose.yml" file and "docker" directory in your project's root directory
-- copy the ".env.example" file into your project directory and rename it into ".env"
-	NOTE: if your project has already a file called .env, you can use a subdirectory as explained in "Existing project - subdirectory"
-
-### Alternative - Existing project - install in subdirectory
-- Download this repository as zip
-- copy your project files inside a "project" subfolder
-
-
-### Alternative - New project - install in subdirectory
-- Download as zip (if you clone it, remove the .git directory)
-- Put your project files inside the root directory or inside a "project" subdirectory (the name of the subdirectory can be set later) OR, alternative, copy 
-- copy .env.example to .env
-
-
-ADDITIONAL SETUP
------------------------
-- go to the directory containing the "docker-compose.yml" file. If you installed via composer, it's inside your "docker" subdirectory
-- open the .env file and set your environment variables
-- on mac: enable file sharing on ./docker/data and ./docker/logs folders
+## WARNING
+- Data Directory: the data directory is configured to be inside "docker_data", placed in your main project's dir. It contains database data, so perform regular backups. The directory is created when you start your containers the first time. If you want to change this path, please don't place the directory inside the "docker" folder, since the folder is recreated every time you run "composer update" and you'll lost data.
 
 
 START
 -----------------------
 
-- execute this command
+- execute this commands (if you don't need a specific engine, omit it in the "up" command)
 
 ```
 docker-compose build apache2 mysql workspace mongo php-fpm couchdb
@@ -149,41 +133,29 @@ php-fpm
 apache2
 mongo
 
-
-EXTRA - QUICK DEMO
+ALTERNATIVE INSTALL METHODS
 -----------------------
-At this url: http://www.lombax.it/files/project.tar
-You can find a ready-to-use laravel project that uses mysql and mongodb.  
-The .env file of the Laravel application is already configured and all composer dependencies already loaded, so to finish the setup you have to do only few things:
 
-- clone this repo
-- do:
-	```
-	cp .env.example .env
-	```
-	NOTE: The .env.example file included in this project is already configured to support this installation, so simply copy .env.example to .env
+### Alternative - Existing project - install in root directory
+- Download this repository as zip
+- copy "docker-compose.yml" file and "docker" directory in your project's root directory
+- copy the ".env.example" file into your project directory and rename it into ".env"
+	NOTE: if your project has already a file called .env, you can use a subdirectory as explained in "Existing project - subdirectory"
 
-- do: 
-```
-docker-compose build apache2 mysql workspace mongo php-fpm
-docker-compose up -d apache2 mysql mongo
-```
-- copy the .tar content into the "project" subdirectory (remember to copy hidden files to)
+### Alternative - Existing project - install in subdirectory
+- Download this repository as zip
+- copy your project files inside a "project" subfolder
 
-- add this user to MongoDB:  
-```
-docker-compose exec mongo sh /mongo.sh localuser secret
-```
-- run laravel migration
-```
-docker-compose exec workspace php artisan migrate
-```
 
-Go to these urls to see the results:
-	- http://localhost/mysql
-	- http://localhost/mongo
+### Alternative - New project - install in subdirectory
+- Download as zip (if you clone it, remove the .git directory)
+- Put your project files inside the root directory or inside a "project" subdirectory (the name of the subdirectory can be set later) OR, alternative, copy 
 
-The test code is in ./project/routes/web.php
+
+ADDITIONAL SETUP and Troubleshooting
+-----------------------
+- on mac: enable file sharing on ./docker_data and ./docker folders
+
 
 ACTUAL ISSUES
 -----------------------
