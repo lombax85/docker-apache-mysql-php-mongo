@@ -1,8 +1,23 @@
-DESCRIPTION
------------------------
+## <a name="contents-link"></a>Table Of Contents
 
-Get your PHP/MySQL project up and running within minutes with the power of Docker and Composer!
-With few commands, you'll have your development, staging and production infrastructures ready-to-go taking advantage of Docker containers.
+* [Project Description](#description-link)
+* [Requirements](#requirements-link)
+* [Quick Install (via Composer)](#quickinstall-link)
+  * [Important informations and warnings](#importantinformations-link)
+  * [Data Directory](#datadirectory-link)
+* [Start](#start-link)
+* [Interacting with projects](#interact-link)
+* [Hostnames](#hostnames-link)
+* [Alternative install methods](#alternative-link)
+* [Troubleshooting](#troubleshooting-link)
+* [Actual Issues](#actualissues-link)
+* [Fixed Issues](#fixedissues-link)
+* [Todo](#todo-link)
+
+## <a name="description-link"></a>PROJECT DESCRIPTION
+
+Get your **PHP/MySQL** project up and running within minutes with the power of Docker and Composer!
+With few commands, you'll have your development, staging and production infrastructures ready-to-go taking advantage of **Docker** containers.
 Within this project, you'll find a container for the following dependencies:
 - apache
 - php-fpm
@@ -13,8 +28,8 @@ Within this project, you'll find a container for the following dependencies:
 Moreover, database data and sessions are managed with a specific container, and a last container is provided as the workspace (a special container you can use to run CLI commands).  
 Thanks to Composer, this project can be easily integrated and encapsulated into you existing webapp, permitting you to deploy it faster on development machines, staging servers and production servers.
 
-REQUIREMENTS
------------------------
+## <a name="requirements-link"></a>REQUIREMENTS
+
 - docker-compose, min version 1.8
 - docker, min version 1.10
 
@@ -23,8 +38,8 @@ If you want to install via composer:
 - php, min version 5.6
 
 
-QUICK INSTALL via Composer
------------------------
+## <a name="quickinstall-link"></a>QUICK INSTALL via Composer
+
 
 NOTE: for alternative install methods, look at the dedicated section 
 
@@ -55,16 +70,27 @@ composer require lombax85/docker-apache-mysql-php-mongo
 
 EXTRA: add /docker and /docker_data in your project's .gitignore file
 
-## IMPORTANT INFORMATIONS AND WARNING
+#### <a name="importantinformations-link">IMPORTANT INFORMATIONS AND WARNING</a>
 - The whole project will be installed inside the "docker" subdir, and a "docker_data" directory will appear when you start you containers.
 - inside the "docker" directory, you will find a .env file where you can set your additional environment variables (the file is pre-configured and no need of additional configuration is needed to get it up and running)
 
-## WARNING
-- Data Directory: the data directory is configured to be inside "docker_data", placed in your main project's dir. It contains database data, so perform regular backups. The directory is created when you start your containers the first time. If you want to change this path, please don't place the directory inside the "docker" folder, since the folder is recreated every time you run "composer update" and you'll lost data.
+#### <a name="datadirectory-link">DATA DIRECTORY</a>
+
+The `./docker_data` directory containes all data of **databases and sessions**.
+If you use this setup in a production environment, **don't forget to backup all data** with the appropriate tools (example: mysqldump for mysql).   
+The `./docker_data` directory is shared among containers using directory binding and is kept between container rebuilds.   
+For this reason, **when you rebuild - for example - your mysql container, the data are not lost**. 
+However, pay attention because if you change your mysql engine to somethings not compatible with the content of your data directory, the content itself can become corrupted.
+
+By default, the data directory is configured to be inside `./docker_data` (if you install via composer) or `./docker/data` if you use the `.env.example` file.
+
+The directory is created when you start your containers the first time. If you want to change this path, please don't place the directory inside the `./docker` folder, since the folder is recreated every time you run "composer update" and you'll lost data.
+
+ 
 
 
-START
------------------------
+## <a name="start-link"></a>START
+
 
 - execute this commands (if you don't need a specific engine, omit it in the "up" command)
 
@@ -80,8 +106,8 @@ docker-compose up -d apache2 mysql mongo couchdb
 	docker-compose exec mongo sh /mongo.sh user password
 	```
 
-Interacting with project
------------------------
+## <a name="interact-link"></a>INTERACTING with projects
+
 The "workspace" container should be used for all cli commands (composer install/update, artisan)
 
 ```
@@ -94,19 +120,9 @@ If you prefer, you can send your command directly without using the shell. For e
 ```
 docker-compose exec workspace php artisan migrate
 ```
+ 
 
-
-Warning, about ./docker/data directory:
------------------------
-
-The ./docker/data folder containes all data of databases and sessions.
-If you use this setup in a production environment, don't forget to backup all data with the appropriate tools (example: mysqldump for mysql).   
-The ./docker/data directory is shared among containers using directory binding and is kept between container rebuilds.   
-For this reason, when you rebuild - for example - your mysql container, the data are not lost. However, pay attention because if you change your mysql engine to somethings not compatible with the content of your data directory, the content itself can become corrupted.  
-
-
-HOSTNAMES:
------------------------
+## <a name="hostnames-link"></a> HOSTNAMES:
 
 Docker creates a virtual private and isolated network for all containers of the same project (it uses the root directory name as a prefix).  
 To reach one container from another (for example for reaching mysql container from php-fpm) simply use the hostname.
@@ -133,32 +149,30 @@ php-fpm
 apache2
 mongo
 
-ALTERNATIVE INSTALL METHODS
------------------------
+## <a name="alternative-link"></a> ALTERNATIVE INSTALL METHODS
 
-### Alternative - Existing project - install in root directory
+#### Alternative - Existing project - install in root directory
 - Download this repository as zip
 - copy "docker-compose.yml" file and "docker" directory in your project's root directory
 - copy the ".env.example" file into your project directory and rename it into ".env"
 	NOTE: if your project has already a file called .env, you can use a subdirectory as explained in "Existing project - subdirectory"
 
-### Alternative - Existing project - install in subdirectory
+#### Alternative - Existing project - install in subdirectory
 - Download this repository as zip
 - copy your project files inside a "project" subfolder
 
 
-### Alternative - New project - install in subdirectory
+#### Alternative - New project - install in subdirectory
 - Download as zip (if you clone it, remove the .git directory)
 - Put your project files inside the root directory or inside a "project" subdirectory (the name of the subdirectory can be set later) OR, alternative, copy 
 
 
-ADDITIONAL SETUP and Troubleshooting
------------------------
+## <a name="troubleshooting-link"></a>ADDITIONAL SETUP and Troubleshooting
 - on mac: enable file sharing on ./docker_data and ./docker folders
 
 
-ACTUAL ISSUES
------------------------
+## <a name="actualissues-link"></a>ACTUAL ISSUES
+
 
 - If you stop (ctrl+c) during "docker-compose up" during the first container startup, the content of /docker/data can became corrupt or not correctly initialized. In this case, for example, you won't be able to connect to MySQL.
 To solve:
@@ -169,11 +183,11 @@ rm -Rf ./docker/data/mysql/*
 ```
 NOTE: if you wipe MongoDB Data, don't forget to re-add the default user
 
-FIXED ISSUES
------------------------
+## <a name="fixedissues-link"></a>FIXED ISSUES
+
 - including as a composer dependencies is, by now, only for testing and development machines. There is a known issue where the ./docker/data directory (the directory containing database data) is deleted if the package is updated via "composer update". This will be solved in a future release, if you plan to use this project in a production environment don't use composer, use other inclusion methods explained in the INSTALL section. FIXED BY: now the data directory is created inside your main project's directory
 - If you install inside two different projects on the same machine, you have to rename the container directory ("docker") to something unique. FIXED BY: the install script now creates a .env with an unique project name, docker_TIMESTAMP
 
-TODO
------------------------
+## <a name="todo-link"></a> TODO
+
 - create install.php install script to replace the post-install and post-update hooks
