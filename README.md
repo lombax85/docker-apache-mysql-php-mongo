@@ -4,6 +4,7 @@
 * [Requirements](#requirements-link)
 * [Quick Install (via Composer)](#quickinstall-link)
   * [Important informations and warnings](#importantinformations-link)
+  * [The Docker .env file](#theenfvile-link)
   * [Data Directory](#datadirectory-link)
 * [Start](#start-link)
 * [Interacting with projects](#interact-link)
@@ -73,6 +74,9 @@ EXTRA: add /docker and /docker_data in your project's .gitignore file
 #### <a name="importantinformations-link">IMPORTANT INFORMATIONS AND WARNING</a>
 - The whole project will be installed inside the "docker" subdir, and a "docker_data" directory will appear when you start you containers.
 - inside the "docker" directory, you will find a .env file where you can set your additional environment variables (the file is pre-configured and no need of additional configuration is needed to get it up and running)
+
+#### <a name="theenvfile-link">THE Docker .env FILE</a>
+- The configuration (ports to bind, modules to enable in the containers) is stored in a file named `.env` inside the `docker` directory. The `composer_install.php` script auto-creates this file when you install this package the first time. Then, it makes a backup copy into your root directory at `.env.docker.backup`. Add this file to your version control. Every time you update the package via `composer update`, assuming that you have correctly added the post-update script as specified, the backup copy is used.
 
 #### <a name="datadirectory-link">DATA DIRECTORY</a>
 
@@ -189,5 +193,7 @@ NOTE: if you wipe MongoDB Data, don't forget to re-add the default user
 - If you install inside two different projects on the same machine, you have to rename the container directory ("docker") to something unique. FIXED BY: the install script now creates a .env with an unique project name, docker_TIMESTAMP
 
 ## <a name="todo-link"></a> TODO
+
+By now, when the system simply creates a backup copy of the default .env file inside the root project dir. If the user install the package and have a .env.docker.backup file inside the dir, the file is copied as the default. This is good, but how to change settings in the .env? If you change it inside docker/.env, than the changes are not updated inside the .env.docker.backup file. I need to decide what to do: remove the .env.docker.backup from version control and backup it simply inside - for example - the data directory, adding a pre-update hook to have the most updated version? Or provide some convenient scripts to the user permitting to manage things automatically?
 
 - create install.php install script to replace the post-install and post-update hooks
