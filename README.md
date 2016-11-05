@@ -4,7 +4,7 @@
 * [Requirements](#requirements-link)
 * [Quick Install (via Composer)](#quickinstall-link)
   * [Important informations and warnings](#importantinformations-link)
-  * [The Docker .env file](#theenfvile-link)
+  * [The Docker .env file](#theenvfile-link)
   * [Data Directory](#datadirectory-link)
 * [Start](#start-link)
 * [Interacting with projects](#interact-link)
