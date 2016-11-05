@@ -24,7 +24,7 @@ services:
             # IMPORTANT: Replace with your Docker Host IP (will be appended to /etc/hosts)
             - "dockerhost:10.200.10.1"
         ports:
-           - "22:22"
+           - "${SSH_PORT}:22"
         tty: true
 
 ### PHP-FPM Container #######################################
