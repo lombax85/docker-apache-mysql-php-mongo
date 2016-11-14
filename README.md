@@ -57,13 +57,13 @@ NOTE: for alternative install methods, look at the dedicated section
 ```
 	"scripts": {
     	"post-install-cmd": [
-        	"php docker/composer_install.php"
+        	"if [ -f docker/composer_install.php ]; then php docker/composer_install.php; fi"
     	],
     	"post-update-cmd": [
-            "php docker/composer_install.php"
+            "if [ -f docker/composer_install.php ]; then php docker/composer_install.php; fi"
         ],
         "pre-update-cmd": [
-            "php docker/composer_pre_update.php"
+            "if [ -f docker/composer_pre_update.php ]; then php docker/composer_pre_update.php; fi"
         ]
     }
 ```
