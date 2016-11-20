@@ -1,4 +1,66 @@
 #!/usr/bin/env php
 <?php
 
-echo "TEST";
+$availableCommands = ["start", "stop", "restart", "dockerize"];
+
+// First filter, need at least one parameters
+if (count($argv) <= 1)
+{
+    help();
+    shutdown();
+    // we should never reach this, shutdown must handle die();
+    die();
+}
+
+// Second filter, check for valid params
+$command = $argv[1];
+if (!in_array($command, $availableCommands))
+{
+    help();
+    shutdown();
+    // we should never reach this, shutdown must handle die();
+    die();
+}
+
+
+call_user_func($command);
+
+// MAIN COMMANDS
+
+function start()
+{
+    res("start");
+}
+
+function stop()
+{
+    res("stop");
+}
+
+function restart()
+{
+    stop();
+    start();
+}
+
+function dockerize()
+{
+    res("dockerize");
+}
+
+
+// HELPER FUNCTIONS
+function res($val)
+{
+    echo $val."\n";
+}
+
+function help()
+{
+    res("Valid commands: dockerize, start, stop, restart");
+}
+
+function shutdown()
+{
+    die();
+}
