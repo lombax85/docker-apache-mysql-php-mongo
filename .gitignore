@@ -2,3 +2,4 @@
 .env
 /project
 .idea
+/docker_data
