@@ -89,7 +89,7 @@ The `./docker_data` directory is shared among containers using directory binding
 For this reason, **when you rebuild - for example - your mysql container, the data are not lost**. 
 However, pay attention because if you change your mysql engine to somethings not compatible with the content of your data directory, the content itself can become corrupted.
 
-By default, the data directory is configured to be inside `./docker_data` (if you install via composer) or `./docker/data` if you use the `.env.example` file.
+By default, the data directory is configured to be inside `./docker_data`.
 
 The directory is created when you start your containers the first time. If you want to change this path, please don't place the directory inside the `./docker` folder, since the folder is recreated every time you run "composer update" and you'll lost data.
 
