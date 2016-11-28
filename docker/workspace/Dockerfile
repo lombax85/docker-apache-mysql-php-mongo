@@ -9,6 +9,12 @@
 # To change its version, see the available Tags on the Docker Hub:
 #    https://hub.docker.com/r/laradock/workspace/tags/
 #
+#--------------------------------------------------------------------------
+# Differences with the original project
+#--------------------------------------------------------------------------
+#
+# - Installs the mysql-client on the workspace if INSTALL_DRUSH is set 
+#
 
 FROM laradock/workspace:1.1
 
@@ -129,6 +135,9 @@ ENV DRUSH_VERSION 8.1.2
 ARG INSTALL_DRUSH=true
 ENV INSTALL_DRUSH ${INSTALL_DRUSH}
 RUN if [ ${INSTALL_DRUSH} = true ]; then \
+    # Install MySQL client (necessary for Drush)
+    apt-get update && \
+    apt-get install -y --force-yes mysql-client && \
     # Install Drush 8 with the phar file.
     curl -fsSL -o /usr/local/bin/drush https://github.com/drush-ops/drush/releases/download/$DRUSH_VERSION/drush.phar | bash && \
     chmod +x /usr/local/bin/drush && \
