@@ -89,16 +89,18 @@ services:
 ### MongoDB Container #######################################
 
     mongo:
-        build: ./${DOCKER_DIRECTORY}/mongo
+        build:
+            context: ./${DOCKER_DIRECTORY}/mongo
+            dockerfile: ${MONGODB_DOCKERFILE}
         ports:
             - "${MONGODB_PORT}:27017"
         volumes_from:
             - volumes_data
-            
+
 ### CouchDB Container #######################################
 
     couchdb:
-        build: 
+        build:
             context: ./${DOCKER_DIRECTORY}/couchdb
             args:
                 - CONF_COUCHDB_USER
